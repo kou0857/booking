@@ -41,7 +41,7 @@
     .ctn{max-width:700px;margin:0 auto;padding:0 1rem}
     .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;margin-bottom:1.5rem}
     .card-accent{border-left:4px solid var(--acc)}
-    .secx-sh-title{font-size:1.2rem;font-weight:700;color:var(--pri);margin-bottom:1rem}
+    .section-title{font-size:1.2rem;font-weight:700;color:var(--pri);margin-bottom:1rem}
 
     /* ===== LOGIN PAGE ===== */
     .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
@@ -226,7 +226,7 @@
     .memo-textarea:focus{outline:none;border-color:var(--pri-l);box-shadow:0 0 0 3px rgba(43,95,142,.1)}
     .memo-save-hint{font-size:.73rem;color:var(--txt-l);margin-top:.3rem;text-align:right;opacity:0;transition:.4s}
     .memo-save-hint.show{opacity:1}
-    .memo-secx-sh-label{font-size:.74rem;font-weight:700;color:var(--txt-l);text-transform:uppercase;letter-spacing:.04em;margin:.8rem 0 .3rem;display:flex;align-items:center;gap:.3rem}
+    .memo-section-label{font-size:.74rem;font-weight:700;color:var(--txt-l);text-transform:uppercase;letter-spacing:.04em;margin:.8rem 0 .3rem;display:flex;align-items:center;gap:.3rem}
     .teacher-note-box{background:#f0f7ff;border:1.5px solid #bee3f8;border-radius:7px;padding:.55rem .75rem;font-size:.83rem;color:#2b6cb0;line-height:1.5;white-space:pre-wrap;min-height:40px}
     .teacher-note-empty{font-size:.8rem;color:#a0aec0;font-style:italic;padding:.35rem 0}
     .memo-teacher-area textarea{background:#fffde7;border-color:#f6e05e}
@@ -260,7 +260,7 @@
       .hdr h1{font-size:1.3rem}
       .day-cell .dn{font-size:.95rem}
       .popup-top .big-n{font-size:1.8rem}
-      .popup-top .irow{flex-direcx-sh:column;gap:.3rem}
+      .popup-top .irow{flex-direction:column;gap:.3rem}
       .admin-panel{width:98%}
     }
   </style>
@@ -335,7 +335,7 @@
     <!-- Left: Calendar Card -->
     <div class="col-cal">
       <div class="card">
-        <div class="secx-sh-title" style="display:flex;align-items:center;gap:.5rem">
+        <div class="section-title" style="display:flex;align-items:center;gap:.5rem">
           <span>📅</span>
           <span data-zh="選擇日期與時段" data-ja="日時を選択"></span>
         </div>
@@ -548,7 +548,7 @@ function setLang(l){
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.includes(l==='zh'?'中':'日')));
   document.querySelectorAll('[data-zh]').forEach(el=>{el.textContent=el.getAttribute('data-'+l)});
   document.querySelectorAll('[data-ph-zh]').forEach(el=>{el.placeholder=el.getAttribute('data-ph-'+l)});
-  document.querySelectorAll('select opx-sh[data-zh]').forEach(el=>{el.textContent=el.getAttribute('data-'+l)});
+  document.querySelectorAll('select option[data-zh]').forEach(el=>{el.textContent=el.getAttribute('data-'+l)});
   renderWeek(); if(selDate)renderSlots(); renderMemoPanel();
 }
 
@@ -715,7 +715,7 @@ function saveTeacherMemo(date,start,text){
   // Also save to server (Google Sheets)
   const url=CFG.scriptUrl;
   if(url){
-    fetch(url,{method:'POST',redirecx:'follow',body:JSON.stringify({acx-sh:'saveMemo',date:date,startTime:start,memo:text})})
+    fetch(url,{method:'POST',redirecx:'follow',body:JSON.stringify({action:'saveMemo',date:date,startTime:start,memo:text})})
     .catch(e=>{});
   }
   ['tHint_','tHint2_'].forEach(prefix=>{
@@ -741,7 +741,7 @@ function _buildMemoEntries(bookings,idSuffix){
     const labelTea=LANG==='zh'?'✏️ 教師備注':'✏️ 先生メモ';
     const savedTxt=LANG==='zh'?'已儲存 ✓':'保存済み ✓';
     // Teacher note display: editable if admin, read-only for student
-    const teacherSecx-sh=isAdmin
+    const teacherSection=isAdmin
       ?`<div class="memo-teacher-area">
           <textarea class="memo-textarea" placeholder="${phTea}"
             oninput="saveTeacherMemo('${b.date}','${b.start}',this.value)"
@@ -764,13 +764,13 @@ function _buildMemoEntries(bookings,idSuffix){
     return`<div class="memo-entry">
       <div class="memo-entry-date">${dateLabel}</div>
       <div class="memo-entry-time">⏰ ${b.start} - ${b.end}</div>
-      <div class="memo-secx-sh-label">${labelStu}</div>
+      <div class="memo-section-label">${labelStu}</div>
       <textarea class="memo-textarea" placeholder="${phStu}"
         oninput="saveMemo('${b.date}','${b.start}',this.value)"
       >${savedMemo}</textarea>
       <div class="memo-save-hint" id="${hintId}">${savedTxt}</div>
-      <div class="memo-secx-sh-label">${labelTea}</div>
-      ${teacherSecx-sh}
+      <div class="memo-section-label">${labelTea}</div>
+      ${teacherSection}
       ${cancelHTML}
     </div>`;
   }).join('');
@@ -857,7 +857,7 @@ function doCancel(){
       method:'POST',
       headers:{'Content-Type':'text/plain'},
       body:JSON.stringify({
-        acx-sh:'cancel',
+        action:'cancel',
         date:c.date,startTime:c.start,endTime:c.end,
         studentName:c.name,studentEmail:c.email
       }),
@@ -1217,7 +1217,7 @@ let serverMemos={};
 function fetchServerMemos(){
   const url=CFG.scriptUrl;
   if(!url)return Promise.resolve({});
-  return fetch(url+'?acx-sh=getMemos',{redirecx:'follow'})
+  return fetch(url+'?action=getMemos',{redirecx:'follow'})
     .then(r=>r.json())
     .then(d=>{if(d.status==='ok'){serverMemos=d.memos||{}}return serverMemos})
     .catch(e=>({}));
@@ -1230,7 +1230,7 @@ function renderAdBookings(){
   if(!url){list.innerHTML=`<div class="bk-empty">${LANG==='zh'?'尚未設定 Apps Script 網址':'Apps Script URLが未設定です'}</div>`;return}
   // Fetch bookings and memos from server in parallel
   Promise.all([
-    fetch(url+'?acx-sh=getBookings',{redirecx:'follow'}).then(r=>r.json()),
+    fetch(url+'?action=getBookings',{redirecx:'follow'}).then(r=>r.json()),
     fetchServerMemos()
   ]).then(([bkData,memos])=>{
     if(bkData.status!=='ok'){list.innerHTML=`<div class="bk-empty">Error: ${bkData.message||'unknown'}</div>`;return}
@@ -1247,7 +1247,7 @@ function renderAdBookings(){
       item.innerHTML=`
         <div class="bk-top"><span class="bk-name">${b.name}</span><span class="bk-time">${b.dateDisp||b.date} ${timeDisp}</span></div>
         <div class="bk-info">${b.email}</div>
-        <div class="memo-secx-sh-label" style="margin:.6rem 0 .25rem">${tLabel}</div>
+        <div class="memo-section-label" style="margin:.6rem 0 .25rem">${tLabel}</div>
         <textarea class="memo-textarea" style="min-height:60px;font-size:.82rem" placeholder="${phTea}"
           oninput="saveTeacherMemo('${b.date}','${b.start}',this.value);renderMemoPanel()"
         >${tMemo}</textarea>`;
@@ -1303,7 +1303,7 @@ function testScript(){
 
 // ================ INIT ================
 function init(){
-  try{const tz=Intl.DateTimeFormat().resolvedOpx-shs().timeZone;const off=new Date().getTimezoneOffset();const hrs=Math.abs(Math.floor(off/60));const sign=off<=0?'+':'-';document.getElementById('tzDisp').textContent=`${tz} (GMT${sign}${hrs})`}catch(e){}
+  try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const off=new Date().getTimezoneOffset();const hrs=Math.abs(Math.floor(off/60));const sign=off<=0?'+':'-';document.getElementById('tzDisp').textContent=`${tz} (GMT${sign}${hrs})`}catch(e){}
   setLang('ja');
   updateLoginUI();
   if(!tryAutoLogin()){show('step0')}
