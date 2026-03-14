@@ -147,7 +147,7 @@
     .btn-out{display:inline-block;margin-top:1.5rem;padding:.6rem 1.5rem;border:2px solid var(--pri);border-radius:25px;color:var(--pri);font-weight:600;background:none;font-size:.9rem;transition:.2s;cursor:pointer}
     .btn-out:hover{background:var(--pri);color:#fff}
 
-    /* ===== ADMIN ===== */
+    /* ===== ADMIN OVERLAY (legacy - kept for slot/settings) ===== */
     .admin-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding-top:50px;overflow-y:auto}
     .admin-panel{background:#fff;border-radius:14px;width:95%;max-width:600px;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-lg);margin-bottom:2rem}
     .admin-hdr{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;border-bottom:1px solid var(--bdr);position:sticky;top:0;background:#fff;border-radius:14px 14px 0 0;z-index:1}
@@ -177,6 +177,81 @@
     .setting-group{margin-bottom:1.2rem}
     .setting-group label{display:block;font-weight:600;font-size:.88rem;margin-bottom:.3rem}
     .setting-group input{width:100%;padding:.55rem .8rem;border:1.5px solid var(--bdr);border-radius:6px;font-size:.88rem;font-family:inherit}
+    /* ===== ADMIN DASHBOARD (Full Page) ===== */
+    .adm-dash{min-height:100vh;background:var(--bg)}
+    .adm-topbar{background:linear-gradient(135deg,#1a3c5e,#2b5f8e);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+    .adm-topbar-left{display:flex;align-items:center;gap:.8rem}
+    .adm-topbar-avatar{width:40px;height:40px;border-radius:50%;background:var(--acc);color:var(--pri);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700}
+    .adm-topbar-title{font-size:1.15rem;font-weight:700}
+    .adm-topbar-sub{font-size:.78rem;opacity:.75}
+    .adm-topbar-right{display:flex;align-items:center;gap:.6rem}
+    .adm-topbar-btn{padding:6px 14px;border:1.5px solid rgba(255,255,255,.4);border-radius:6px;background:none;color:#fff;font-size:.82rem;font-weight:600;cursor:pointer;transition:.2s}
+    .adm-topbar-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.7)}
+    .adm-topbar-btn.danger{border-color:rgba(229,62,62,.6);color:#feb2b2}
+    .adm-topbar-btn.danger:hover{background:rgba(229,62,62,.2);border-color:#e53e3e;color:#fff}
+    .adm-nav{display:flex;gap:0;background:#fff;border-bottom:2px solid var(--bdr);padding:0 1.5rem;max-width:1100px;margin:0 auto}
+    .adm-nav-btn{padding:.8rem 1.2rem;border:none;background:none;font-weight:600;font-size:.9rem;color:var(--txt-l);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s;white-space:nowrap}
+    .adm-nav-btn.active{color:var(--pri);border-bottom-color:var(--acc)}
+    .adm-nav-btn:hover{color:var(--pri)}
+    .adm-content{max-width:1100px;margin:0 auto;padding:1.5rem}
+    .adm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .adm-stat-card{background:#fff;border-radius:12px;padding:1.2rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:1rem}
+    .adm-stat-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+    .adm-stat-icon.blue{background:#ebf5ff;color:#2b6cb0}
+    .adm-stat-icon.green{background:#f0fff4;color:#38a169}
+    .adm-stat-icon.orange{background:#fffaf0;color:#dd6b20}
+    .adm-stat-icon.purple{background:#faf5ff;color:#805ad5}
+    .adm-stat-num{font-size:1.6rem;font-weight:700;color:var(--pri);line-height:1}
+    .adm-stat-label{font-size:.78rem;color:var(--txt-l);margin-top:.15rem}
+    .adm-filter-bar{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;flex-wrap:wrap}
+    .adm-filter-bar input,.adm-filter-bar select{padding:.5rem .8rem;border:1.5px solid var(--bdr);border-radius:8px;font-size:.85rem;font-family:inherit}
+    .adm-filter-bar input:focus,.adm-filter-bar select:focus{outline:none;border-color:var(--pri-l)}
+    .adm-bk-card{background:#fff;border-radius:12px;box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;transition:.2s;border:1px solid transparent}
+    .adm-bk-card:hover{border-color:var(--pri-l);box-shadow:var(--shadow-lg)}
+    .adm-bk-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;cursor:pointer;gap:1rem}
+    .adm-bk-left{display:flex;align-items:center;gap:1rem;flex:1;min-width:0}
+    .adm-bk-avatar{width:38px;height:38px;border-radius:50%;background:var(--pri-l);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;flex-shrink:0}
+    .adm-bk-info{min-width:0}
+    .adm-bk-name{font-weight:700;color:var(--pri);font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .adm-bk-email{font-size:.78rem;color:var(--txt-l);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .adm-bk-datetime{text-align:right;flex-shrink:0}
+    .adm-bk-date{font-weight:600;color:var(--pri);font-size:.9rem}
+    .adm-bk-time{font-size:.8rem;color:var(--pri-l)}
+    .adm-bk-status{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.72rem;font-weight:600;margin-left:.6rem}
+    .adm-bk-status.upcoming{background:#ebf8ff;color:#2b6cb0}
+    .adm-bk-status.past{background:#f7fafc;color:#a0aec0}
+    .adm-bk-status.today{background:#fefcbf;color:#975a16}
+    .adm-bk-expand{display:none;padding:0 1.25rem 1.25rem;border-top:1px solid var(--bdr)}
+    .adm-bk-expand.open{display:block}
+    .adm-bk-toggle{background:none;border:none;font-size:1rem;color:var(--txt-l);cursor:pointer;transition:.2s;padding:4px}
+    .adm-bk-toggle.open{transform:rotate(180deg)}
+    .adm-comment-section{margin-top:1rem}
+    .adm-comment-label{font-size:.8rem;font-weight:700;color:var(--txt-l);text-transform:uppercase;letter-spacing:.03em;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+    .adm-comment-list{margin-bottom:.8rem}
+    .adm-comment-item{display:flex;gap:.6rem;padding:.6rem 0;border-bottom:1px solid #f0f3f6}
+    .adm-comment-item:last-child{border-bottom:none}
+    .adm-comment-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;color:#fff}
+    .adm-comment-avatar.admin{background:var(--acc);color:var(--pri)}
+    .adm-comment-avatar.student{background:var(--pri-l)}
+    .adm-comment-body{flex:1;min-width:0}
+    .adm-comment-meta{display:flex;align-items:center;gap:.5rem;margin-bottom:.15rem}
+    .adm-comment-author{font-size:.78rem;font-weight:700;color:var(--pri)}
+    .adm-comment-time{font-size:.7rem;color:var(--txt-l)}
+    .adm-comment-text{font-size:.84rem;color:var(--txt);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+    .adm-comment-input{display:flex;gap:.5rem;margin-top:.5rem}
+    .adm-comment-input textarea{flex:1;padding:.55rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-size:.84rem;font-family:inherit;resize:none;min-height:44px;max-height:120px;transition:.2s;line-height:1.4}
+    .adm-comment-input textarea:focus{outline:none;border-color:var(--pri-l);box-shadow:0 0 0 3px rgba(43,95,142,.1)}
+    .adm-comment-send{padding:0 14px;background:var(--pri);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:.82rem;cursor:pointer;transition:.2s;white-space:nowrap;align-self:flex-end;height:44px}
+    .adm-comment-send:hover{background:var(--pri-l)}
+    .adm-comment-send:disabled{opacity:.4;cursor:not-allowed}
+    @media(max-width:600px){
+      .adm-topbar{padding:.8rem 1rem}
+      .adm-nav{padding:0 .8rem}
+      .adm-content{padding:1rem}
+      .adm-bk-header{flex-wrap:wrap;gap:.6rem}
+      .adm-bk-datetime{text-align:left}
+      .adm-stats{grid-template-columns:1fr 1fr}
+    }
     .setting-group input:focus{outline:none;border-color:var(--pri-l)}
     .setting-group .hint{font-size:.76rem;color:var(--txt-l);margin-top:.2rem}
     .day-checks{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.35rem}
@@ -534,7 +609,105 @@
   </div>
 </div>
 
-<div class="footer">© 2026 Kou <span data-zh="線上家教預約系統" data-ja="オンライン個別指導予約システム"></span></div>
+<!-- ==================== ADMIN DASHBOARD (Full Page) ==================== -->
+<div id="stepAdmin" class="adm-dash hidden">
+  <!-- Top Bar -->
+  <div class="adm-topbar">
+    <div class="adm-topbar-left">
+      <div class="adm-topbar-avatar">K</div>
+      <div>
+        <div class="adm-topbar-title" data-zh="Kou 管理後台" data-ja="Kou 管理パネル"></div>
+        <div class="adm-topbar-sub" data-zh="線上家教預約系統" data-ja="オンライン個別指導予約システム"></div>
+      </div>
+    </div>
+    <div class="adm-topbar-right">
+      <button class="adm-topbar-btn" onclick="openAdminSettings()" data-zh="⚙ 設定" data-ja="⚙ 設定"></button>
+      <button class="adm-topbar-btn danger" onclick="exitAdmin()" data-zh="登出管理" data-ja="管理ログアウト"></button>
+    </div>
+  </div>
+
+  <!-- Nav Tabs -->
+  <div class="adm-nav">
+    <button class="adm-nav-btn active" onclick="showAdmPage(0,this)" data-zh="📋 預約總覽" data-ja="📋 予約一覧"></button>
+    <button class="adm-nav-btn" onclick="showAdmPage(1,this)" data-zh="🕐 時段管理" data-ja="🕐 時間帯管理"></button>
+    <button class="adm-nav-btn" onclick="showAdmPage(2,this)" data-zh="⚙ 系統設定" data-ja="⚙ システム設定"></button>
+  </div>
+
+  <!-- Content Area -->
+  <div class="adm-content">
+
+    <!-- Page 0: Booking Overview -->
+    <div class="adm-page" id="admPage0">
+      <!-- Stats Cards -->
+      <div class="adm-stats" id="admStats"></div>
+      <!-- Filter Bar -->
+      <div class="adm-filter-bar">
+        <input type="text" id="admSearchInput" oninput="filterAdmBookings()" style="flex:1;min-width:160px" data-ph-zh="搜尋學生姓名或信箱..." data-ph-ja="生徒名またはメールで検索...">
+        <select id="admFilterStatus" onchange="filterAdmBookings()">
+          <option value="all" data-zh="全部" data-ja="すべて"></option>
+          <option value="upcoming" data-zh="即將到來" data-ja="今後の予約"></option>
+          <option value="today" data-zh="今天" data-ja="今日"></option>
+          <option value="past" data-zh="已結束" data-ja="終了済み"></option>
+        </select>
+        <button class="adm-topbar-btn" style="color:var(--pri);border-color:var(--bdr)" onclick="loadAdmBookings()" data-zh="🔄 重新整理" data-ja="🔄 更新"></button>
+      </div>
+      <!-- Booking List -->
+      <div id="admBookingList"></div>
+    </div>
+
+    <!-- Page 1: Slot Management (reuses existing admin slot panel) -->
+    <div class="adm-page hidden" id="admPage1">
+      <div class="card" style="max-width:700px">
+        <div class="section-title" data-zh="時段管理" data-ja="時間帯管理"></div>
+        <div id="admSlotList"></div>
+        <div class="add-slot-row">
+          <div class="fg"><label data-zh="開始" data-ja="開始"></label><input type="time" id="admNewStart" value="09:00"></div>
+          <div class="fg"><label data-zh="結束" data-ja="終了"></label><input type="time" id="admNewEnd" value="09:50"></div>
+          <button class="btn-add" onclick="admAddSlot()" data-zh="＋ 新增" data-ja="＋ 追加"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 2: Settings (reuses existing settings) -->
+    <div class="adm-page hidden" id="admPage2">
+      <div class="card" style="max-width:700px">
+        <div class="section-title" data-zh="系統設定" data-ja="システム設定"></div>
+        <div class="setting-group">
+          <label data-zh="管理密碼" data-ja="管理パスワード"></label>
+          <input type="text" id="admSetPass" value="">
+          <div class="hint" data-zh="管理介面的登入密碼" data-ja="管理パネルのログインパスワード"></div>
+        </div>
+        <div class="setting-group">
+          <label data-zh="通知信箱" data-ja="通知メールアドレス"></label>
+          <input type="email" id="admSetEmail" value="">
+        </div>
+        <div class="setting-group">
+          <label data-zh="課程時長（分鐘）" data-ja="授業時間（分）"></label>
+          <input type="number" id="admSetDur" value="50" min="10" max="180">
+        </div>
+        <div class="setting-group">
+          <label data-zh="可預約天數" data-ja="予約可能日数"></label>
+          <input type="number" id="admSetMaxD" value="30" min="7" max="90">
+        </div>
+        <div class="setting-group">
+          <label data-zh="可預約的星期" data-ja="予約可能な曜日"></label>
+          <div class="day-checks" id="admDayChecks"></div>
+        </div>
+        <div class="setting-group">
+          <label>Google Apps Script URL</label>
+          <input type="url" id="admSetScript" placeholder="https://script.google.com/macros/s/.../exec">
+          <div class="hint" data-zh="部署 Apps Script 後的網址" data-ja="Apps Script デプロイ後のURL"></div>
+          <div id="admScriptStatus" style="margin-top:.4rem;font-size:.82rem"></div>
+          <button onclick="admTestScript()" style="margin-top:.4rem;padding:.35rem .8rem;border:1.5px solid var(--pri-l);border-radius:5px;background:none;color:var(--pri-l);font-size:.8rem;font-weight:600;cursor:pointer" data-zh="測試連線" data-ja="接続テスト"></button>
+        </div>
+        <button class="btn-save" onclick="admSaveSettings()" data-zh="儲存設定" data-ja="設定を保存"></button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer" id="mainFooter">© 2026 Kou <span data-zh="線上家教預約系統" data-ja="オンライン個別指導予約システム"></span></div>
 
 <script>
 // ================ I18N ================
@@ -1301,6 +1474,363 @@ function testScript(){
     .catch(e=>{st.innerHTML='<span style="color:var(--red)">❌ '+(LANG==='zh'?'無法連線，請確認網址':'接続できません。URLを確認してください')+'</span>'});
 }
 
+// ================ ADMIN DASHBOARD ================
+let admBookingsData=[];
+let admCommentsCache={}; // {date_start: [{author,text,time,role}]}
+
+function getCommentsKey(date,start){return`adm_comments_${date}_${start}`}
+function loadComments(date,start){
+  const key=getCommentsKey(date,start);
+  try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return[]}
+}
+function saveComment(date,start,comment){
+  const key=getCommentsKey(date,start);
+  const arr=loadComments(date,start);
+  arr.push(comment);
+  try{localStorage.setItem(key,JSON.stringify(arr))}catch(e){}
+  // Also sync to server
+  if(CFG.scriptUrl){
+    fetch(CFG.scriptUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({
+      action:'saveComment',date,startTime:start,
+      author:comment.author,text:comment.text,time:comment.time,role:comment.role
+    }),mode:'no-cors'}).catch(()=>{});
+  }
+  return arr;
+}
+
+function enterAdminDashboard(){
+  isAdmin=true;
+  hide('step0');hide('step1');hide('step2');hide('adminOverlay');hide('pwOverlay');
+  document.getElementById('mainFooter').classList.add('hidden');
+  document.querySelector('.admin-fab').classList.add('hidden');
+  document.querySelector('.lang-bar').style.zIndex='1001';
+  show('stepAdmin');
+  setLang(LANG);
+  loadAdmBookings();
+  admRenderSlots();
+  admRenderSettings();
+  window.scrollTo(0,0);
+}
+
+function exitAdmin(){
+  isAdmin=false;
+  hide('stepAdmin');
+  document.getElementById('mainFooter').classList.remove('hidden');
+  document.querySelector('.admin-fab').classList.remove('hidden');
+  if(currentUser.name){
+    enterCalendar();
+  }else{
+    show('step0');
+  }
+}
+
+function openAdminSettings(){showAdmPage(2,document.querySelectorAll('.adm-nav-btn')[2])}
+
+function showAdmPage(idx,btn){
+  document.querySelectorAll('.adm-page').forEach((p,i)=>p.classList.toggle('hidden',i!==idx));
+  document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+
+// Update checkPw to go to dashboard
+const _origCheckPw=checkPw;
+
+function loadAdmBookings(){
+  const list=document.getElementById('admBookingList');
+  const stats=document.getElementById('admStats');
+  if(!list)return;
+  list.innerHTML=`<div class="bk-empty">${LANG==='zh'?'載入中...':'読み込み中...'}</div>`;
+
+  const url=CFG.scriptUrl;
+  if(!url){
+    // fallback to local bookings
+    admBookingsData=(CFG.bookings||[]).slice();
+    _renderAdmBookings();
+    return;
+  }
+  Promise.all([
+    fetch(url+'?action=getBookings',{redirect:'follow'}).then(r=>r.json()).catch(()=>({status:'error'})),
+    fetch(url+'?action=getComments',{redirect:'follow'}).then(r=>r.json()).catch(()=>({status:'error'})),
+    fetchServerMemos()
+  ]).then(([bkData,cmData])=>{
+    if(bkData.status==='ok'){
+      admBookingsData=bkData.bookings||[];
+      // Also cache in CFG
+      CFG.bookings=admBookingsData.map(b=>({name:b.name,email:b.email,date:b.date,start:b.start,end:b.end,dateDisp:b.dateDisp,time:b.start+' - '+b.end,gcal:b.gcal}));
+      saveCfg();
+    }else{
+      admBookingsData=(CFG.bookings||[]).slice();
+    }
+    // Load server comments if available
+    if(cmData.status==='ok'&&cmData.comments){
+      Object.keys(cmData.comments).forEach(k=>{
+        try{localStorage.setItem('adm_comments_'+k,JSON.stringify(cmData.comments[k]))}catch(e){}
+      });
+    }
+    _renderAdmBookings();
+  }).catch(()=>{
+    admBookingsData=(CFG.bookings||[]).slice();
+    _renderAdmBookings();
+  });
+}
+
+function _renderAdmBookings(){
+  const list=document.getElementById('admBookingList');
+  const stats=document.getElementById('admStats');
+  if(!list)return;
+
+  const now=new Date();
+  const todayStr=fmtISO(now);
+  const bks=admBookingsData.slice().sort((a,b)=>{
+    const da=a.date||'',db=b.date||'';
+    if(da!==db)return da>db?-1:1;
+    return(a.start||'')>(b.start||'')?-1:1;
+  });
+
+  // Stats
+  const total=bks.length;
+  const upcoming=bks.filter(b=>b.date>todayStr||(b.date===todayStr&&b.start>now.getHours()+':'+String(now.getMinutes()).padStart(2,'0'))).length;
+  const todayCount=bks.filter(b=>b.date===todayStr).length;
+  const uniqueStudents=[...new Set(bks.map(b=>(b.email||'').toLowerCase()))].length;
+
+  const sL=LANG==='zh'
+    ?{total:'總預約數',upcoming:'即將到來',today:'今日課程',students:'學生人數'}
+    :{total:'総予約数',upcoming:'今後の予約',today:'本日の授業',students:'生徒数'};
+  if(stats)stats.innerHTML=`
+    <div class="adm-stat-card"><div class="adm-stat-icon blue">📊</div><div><div class="adm-stat-num">${total}</div><div class="adm-stat-label">${sL.total}</div></div></div>
+    <div class="adm-stat-card"><div class="adm-stat-icon green">📅</div><div><div class="adm-stat-num">${upcoming}</div><div class="adm-stat-label">${sL.upcoming}</div></div></div>
+    <div class="adm-stat-card"><div class="adm-stat-icon orange">🔔</div><div><div class="adm-stat-num">${todayCount}</div><div class="adm-stat-label">${sL.today}</div></div></div>
+    <div class="adm-stat-card"><div class="adm-stat-icon purple">👥</div><div><div class="adm-stat-num">${uniqueStudents}</div><div class="adm-stat-label">${sL.students}</div></div></div>`;
+
+  // Render list
+  if(!bks.length){
+    list.innerHTML=`<div class="bk-empty">${LANG==='zh'?'尚無預約紀錄':'予約記録はありません'}</div>`;
+    return;
+  }
+  list.innerHTML='';
+  const days=LANG==='zh'?['日','一','二','三','四','五','六']:['日','月','火','水','木','金','土'];
+  bks.forEach((b,idx)=>{
+    const dt=new Date(b.date+'T00:00:00');
+    const wd=days[dt.getDay()];
+    const [y,m,d]=(b.date||'').split('-');
+    const dateLabel=y?`${y}/${parseInt(m)}/${parseInt(d)}（${wd}）`:(b.dateDisp||b.date);
+    const timeDisp=(b.start||'')+(b.end?(' - '+b.end):'');
+
+    // Status
+    let statusCls='upcoming',statusTxt=LANG==='zh'?'即將到來':'今後';
+    if(b.date<todayStr){statusCls='past';statusTxt=LANG==='zh'?'已結束':'終了'}
+    else if(b.date===todayStr){statusCls='today';statusTxt=LANG==='zh'?'今天':'本日'}
+
+    const initial=((b.name||'?')[0]||'?').toUpperCase();
+    const cardId=`admBk_${idx}`;
+    const expandId=`admBkExp_${idx}`;
+
+    // Load comments for this booking
+    const comments=loadComments(b.date,b.start);
+    const teacherMemo=serverMemos[b.date+'_'+b.start]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
+
+    const card=document.createElement('div');
+    card.className='adm-bk-card';
+    card.dataset.name=(b.name||'').toLowerCase();
+    card.dataset.email=(b.email||'').toLowerCase();
+    card.dataset.status=statusCls;
+    card.id=cardId;
+
+    const cLabel=LANG==='zh'?'💬 留言記錄':'💬 コメント';
+    const cPh=LANG==='zh'?'輸入留言...':'コメントを入力...';
+    const cSend=LANG==='zh'?'送出':'送信';
+    const tLabel=LANG==='zh'?'✏️ 教師備注':'✏️ 先生メモ';
+    const tPh=LANG==='zh'?'課程重點、作業、評語…':'授業メモ：課題・評価など…';
+    const savedTxt=LANG==='zh'?'已儲存 ✓':'保存済み ✓';
+
+    let commentsHTML='';
+    if(comments.length){
+      commentsHTML=comments.map(c=>{
+        const avatarCls=c.role==='admin'?'admin':'student';
+        const avatarTxt=c.role==='admin'?'K':(c.author||'?')[0].toUpperCase();
+        const timeStr=c.time?new Date(c.time).toLocaleString(LANG==='zh'?'zh-TW':'ja-JP',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+        return`<div class="adm-comment-item">
+          <div class="adm-comment-avatar ${avatarCls}">${avatarTxt}</div>
+          <div class="adm-comment-body">
+            <div class="adm-comment-meta">
+              <span class="adm-comment-author">${(c.author||'').replace(/</g,'&lt;')}</span>
+              <span class="adm-comment-time">${timeStr}</span>
+            </div>
+            <div class="adm-comment-text">${(c.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }else{
+      commentsHTML=`<div style="text-align:center;color:var(--txt-l);font-size:.82rem;padding:.5rem 0">${LANG==='zh'?'尚無留言':'コメントなし'}</div>`;
+    }
+
+    card.innerHTML=`
+      <div class="adm-bk-header" onclick="toggleAdmExpand('${expandId}',this)">
+        <div class="adm-bk-left">
+          <div class="adm-bk-avatar">${initial}</div>
+          <div class="adm-bk-info">
+            <div class="adm-bk-name">${(b.name||'').replace(/</g,'&lt;')}<span class="adm-bk-status ${statusCls}">${statusTxt}</span></div>
+            <div class="adm-bk-email">${(b.email||'').replace(/</g,'&lt;')}</div>
+          </div>
+        </div>
+        <div class="adm-bk-datetime">
+          <div class="adm-bk-date">${dateLabel}</div>
+          <div class="adm-bk-time">${timeDisp}</div>
+        </div>
+        <button class="adm-bk-toggle" onclick="event.stopPropagation();toggleAdmExpand('${expandId}',this.parentElement)">▼</button>
+      </div>
+      <div class="adm-bk-expand" id="${expandId}">
+        <!-- Teacher Memo -->
+        <div class="adm-comment-section">
+          <div class="adm-comment-label">${tLabel}</div>
+          <textarea class="memo-textarea" style="min-height:60px;font-size:.84rem;background:#fffde7;border-color:#f6e05e" placeholder="${tPh}"
+            oninput="saveTeacherMemo('${b.date}','${b.start}',this.value)">${teacherMemo}</textarea>
+          <div class="memo-save-hint" id="admTHint_${idx}">${savedTxt}</div>
+        </div>
+        <!-- Comments -->
+        <div class="adm-comment-section" style="margin-top:.8rem">
+          <div class="adm-comment-label">${cLabel} <span style="font-weight:400;color:var(--txt-l)">(${comments.length})</span></div>
+          <div class="adm-comment-list" id="admCmtList_${idx}">${commentsHTML}</div>
+          <div class="adm-comment-input">
+            <textarea id="admCmtInput_${idx}" placeholder="${cPh}" rows="1"
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();admSendComment(${idx},'${b.date}','${b.start}','${(b.name||'').replace(/'/g,"\\'")}')}"
+            ></textarea>
+            <button class="adm-comment-send" onclick="admSendComment(${idx},'${b.date}','${b.start}','${(b.name||'').replace(/'/g,"\\'")}')">
+              ${cSend}
+            </button>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function toggleAdmExpand(expandId,headerEl){
+  const exp=document.getElementById(expandId);
+  if(!exp)return;
+  const isOpen=exp.classList.toggle('open');
+  // Toggle arrow
+  const toggle=headerEl.querySelector?headerEl.querySelector('.adm-bk-toggle'):null;
+  if(toggle)toggle.classList.toggle('open',isOpen);
+}
+
+function filterAdmBookings(){
+  const q=(document.getElementById('admSearchInput').value||'').toLowerCase();
+  const status=document.getElementById('admFilterStatus').value;
+  document.querySelectorAll('.adm-bk-card').forEach(card=>{
+    const nameMatch=!q||card.dataset.name.includes(q)||card.dataset.email.includes(q);
+    const statusMatch=status==='all'||card.dataset.status===status;
+    card.style.display=(nameMatch&&statusMatch)?'':'none';
+  });
+}
+
+function admSendComment(idx,date,start,studentName){
+  const input=document.getElementById('admCmtInput_'+idx);
+  if(!input)return;
+  const text=input.value.trim();
+  if(!text)return;
+
+  const comment={
+    author:'Kou（管理員）',
+    text:text,
+    time:new Date().toISOString(),
+    role:'admin'
+  };
+  const allComments=saveComment(date,start,comment);
+
+  // Re-render comment list
+  const listEl=document.getElementById('admCmtList_'+idx);
+  if(listEl){
+    const timeStr=new Date(comment.time).toLocaleString(LANG==='zh'?'zh-TW':'ja-JP',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const newHTML=`<div class="adm-comment-item">
+      <div class="adm-comment-avatar admin">K</div>
+      <div class="adm-comment-body">
+        <div class="adm-comment-meta">
+          <span class="adm-comment-author">${comment.author}</span>
+          <span class="adm-comment-time">${timeStr}</span>
+        </div>
+        <div class="adm-comment-text">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
+      </div>
+    </div>`;
+    // Remove "no comments" placeholder if present
+    if(allComments.length===1){listEl.innerHTML=''}
+    listEl.insertAdjacentHTML('beforeend',newHTML);
+    // Update count
+    const section=listEl.closest('.adm-comment-section');
+    if(section){
+      const label=section.querySelector('.adm-comment-label span');
+      if(label)label.textContent=`(${allComments.length})`;
+    }
+  }
+  input.value='';
+}
+
+// Admin Dashboard - Slot Management
+let admSlotMode='weekday';
+function admRenderSlots(){
+  const list=document.getElementById('admSlotList');if(!list)return;
+  list.innerHTML='';
+  const wdLabel=LANG==='zh'?'平日 (週一~週五)':'平日 (月〜金)';
+  const weLabel=LANG==='zh'?'週末 (週六、日)':'週末 (土・日)';
+  list.innerHTML=`<div style="display:flex;gap:.5rem;margin-bottom:1rem">
+    <button class="admin-tab ${admSlotMode==='weekday'?'active':''}" onclick="admSlotMode='weekday';admRenderSlots()" style="border-bottom:3px solid ${admSlotMode==='weekday'?'var(--acc)':'transparent'}">${wdLabel}</button>
+    <button class="admin-tab ${admSlotMode==='weekend'?'active':''}" onclick="admSlotMode='weekend';admRenderSlots()" style="border-bottom:3px solid ${admSlotMode==='weekend'?'var(--acc)':'transparent'}">${weLabel}</button>
+  </div>`;
+  const slots=admSlotMode==='weekday'?(CFG.weekdaySlots||[]):(CFG.weekendSlots||[]);
+  if(!slots.length){list.innerHTML+='<div style="text-align:center;color:var(--txt-l);padding:1rem">—</div>';return}
+  slots.forEach((sl,i)=>{
+    const row=document.createElement('div');row.className='slot-row';
+    row.innerHTML=`<span class="slot-time">${sl.s} - ${sl.e}</span><span class="slot-day">${CFG.duration} min</span><button class="slot-del" onclick="admDelSlot('${admSlotMode}',${i})">✕</button>`;
+    list.appendChild(row);
+  });
+}
+function admAddSlot(){
+  const s=document.getElementById('admNewStart').value,e=document.getElementById('admNewEnd').value;
+  if(!s||!e||s>=e)return;
+  const key=admSlotMode==='weekday'?'weekdaySlots':'weekendSlots';
+  if(!CFG[key])CFG[key]=[];
+  CFG[key].push({s,e});CFG[key].sort((a,b)=>a.s.localeCompare(b.s));saveCfg();admRenderSlots();
+}
+function admDelSlot(mode,i){const key=mode==='weekday'?'weekdaySlots':'weekendSlots';CFG[key].splice(i,1);saveCfg();admRenderSlots()}
+
+// Admin Dashboard - Settings
+function admRenderSettings(){
+  const sp=document.getElementById('admSetPass');if(!sp)return;
+  sp.value=CFG.password;
+  document.getElementById('admSetEmail').value=CFG.email;
+  document.getElementById('admSetDur').value=CFG.duration;
+  document.getElementById('admSetMaxD').value=CFG.maxDays;
+  document.getElementById('admSetScript').value=CFG.scriptUrl||'';
+  const dc=document.getElementById('admDayChecks');dc.innerHTML='';
+  const labels=LANG==='zh'?DL_ZH:DL_JA;
+  for(let i=0;i<7;i++){const d=document.createElement('label');d.className='day-check';d.innerHTML=`<input type="checkbox" value="${i}" ${CFG.availDays.includes(i)?'checked':''}> ${labels[i]}`;dc.appendChild(d)}
+}
+function admSaveSettings(){
+  CFG.password=document.getElementById('admSetPass').value||'admin123';
+  CFG.email=document.getElementById('admSetEmail').value;
+  CFG.duration=parseInt(document.getElementById('admSetDur').value)||50;
+  CFG.maxDays=parseInt(document.getElementById('admSetMaxD').value)||30;
+  CFG.scriptUrl=document.getElementById('admSetScript').value.trim();
+  CFG.availDays=[...document.querySelectorAll('#admDayChecks input:checked')].map(c=>parseInt(c.value));
+  saveCfg();
+  const btn=document.querySelector('#admPage2 .btn-save');const orig=btn.textContent;
+  btn.textContent='✓ Saved!';btn.style.background='#c6f6d5';
+  setTimeout(()=>{btn.textContent=orig;btn.style.background=''},1500);
+}
+function admTestScript(){
+  const url=document.getElementById('admSetScript').value.trim();
+  const st=document.getElementById('admScriptStatus');
+  if(!url){st.innerHTML='<span style="color:var(--red)">⚠ '+(LANG==='zh'?'請先填入網址':'URLを入力してください')+'</span>';return}
+  st.innerHTML='<span style="color:var(--pri-l)">'+(LANG==='zh'?'測試中...':'テスト中...')+'</span>';
+  fetch(url,{redirect:'follow'})
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.status==='ok')st.innerHTML='<span style="color:var(--green)">✅ '+(LANG==='zh'?'連線成功！':'接続成功！')+'</span>';
+      else st.innerHTML='<span style="color:var(--red)">❌ '+(LANG==='zh'?'連線失敗':'接続失敗')+'</span>';
+    })
+    .catch(()=>{st.innerHTML='<span style="color:var(--red)">❌ '+(LANG==='zh'?'無法連線':'接続できません')+'</span>'});
+}
+
 // ================ INIT ================
 function init(){
   try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const off=new Date().getTimezoneOffset();const hrs=Math.abs(Math.floor(off/60));const sign=off<=0?'+':'-';document.getElementById('tzDisp').textContent=`${tz} (GMT${sign}${hrs})`}catch(e){}
@@ -1308,6 +1838,17 @@ function init(){
   updateLoginUI();
   if(!tryAutoLogin()){show('step0')}
 }
+
+// Override checkPw to redirect to admin dashboard
+checkPw=function(){
+  if(document.getElementById('pwInput').value===CFG.password){
+    hide('pwOverlay');
+    enterAdminDashboard();
+  }else{
+    document.getElementById('pwErr').classList.remove('hidden');
+  }
+};
+
 init();
 </script>
 </body>
