@@ -924,9 +924,9 @@ function _buildMemoEntries(bookings,idSuffix){
       :(teacherMemo
           ?`<div class="teacher-note-box">${teacherMemo.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>`
           :`<div class="teacher-note-empty">${LANG==='zh'?'（教師尚未填寫）':'（先生未記入）'}</div>`);
-    // Cancel button: only show if lesssh is more than 24h away
-    const lessshTime=new Date(`${b.date}T${b.start}:00`);h
-    const hoursLeft=(lessshTime-new Date())/(1000*60*60);
+    // Cancel button: only show if lesson is more than 24h away
+    const lessonTime=new Date(`${b.date}T${b.start}:00`);
+    const hoursLeft=(lessonTime-new Date())/(1000*60*60);
     let cancelHTML='';
     if(hoursLeft>24){
       const cLabel=LANG==='zh'?'取消預約':'予約キャンセル';
