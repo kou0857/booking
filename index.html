@@ -714,7 +714,7 @@
 
 <script>
 // ================ VERSION CHECK ================
-const APP_VERSION='20260315b';
+const APP_VERSION='20260315c';
 (function(){try{const v=localStorage.getItem('kou_app_version');if(v&&v!==APP_VERSION){localStorage.removeItem('kou_app_version');location.reload(true);return}localStorage.setItem('kou_app_version',APP_VERSION)}catch(e){}})();
 // ================ I18N ================
 const I18N={
@@ -965,9 +965,12 @@ function _buildMemoEntries(bookings,idSuffix){
     const wd=days[dt.getDay()];
     const [y,m,d]=b.date.split('-');
     const dateLabel=`${y}年${parseInt(m)}月${parseInt(d)}日（${wd}）`;
-    const savedMemo=localStorage.getItem(getMemoKey(b.date,b.start))||'';
+    const sMemoServerKey='student_memo_'+normEmail(currentUser.email)+'_'+b.date+'_'+b.start;
+    const sMemoServerKey2='student_memo_'+normEmail(currentUser.email)+'__'+b.date+'_'+b.start;
+    const savedMemo=serverMemos[sMemoServerKey]||serverMemos[sMemoServerKey2]||localStorage.getItem(getMemoKey(b.date,b.start))||'';
     const memoKey='teacher_memo_'+b.date+'_'+b.start;
-    const teacherMemo=serverMemos[memoKey]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
+    const memoKey2='teacher_memo__'+b.date+'_'+b.start;
+    const teacherMemo=serverMemos[memoKey]||serverMemos[memoKey2]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
     const hintId=`memoHint${idSuffix}_${b.date}_${b.start.replace(':','')}`;
     const tHintId=`tHint${idSuffix}_${b.date}_${b.start.replace(':','')}`;
     const phStu=LANG==='zh'?'記錄今日進度、作業、筆記…':'今日の進捗・宿題・メモを記入…';
@@ -1499,12 +1502,14 @@ function renderAdBookings(){
     list.innerHTML='';
     bks.forEach(b=>{
       const memoKey='teacher_memo_'+b.date+'_'+b.start;
-      const tMemo=serverMemos[memoKey]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
+      const memoKey2='teacher_memo__'+b.date+'_'+b.start;
+      const tMemo=serverMemos[memoKey]||serverMemos[memoKey2]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
       const phTea=LANG==='zh'?'教師備注：課程重點、作業、評語…':'授業メモ：課題・評価など…';
       const tLabel=LANG==='zh'?'✏️ 教師備注':'✏️ 先生メモ';
       const sLabel2=LANG==='zh'?'📝 學生留言':'📝 生徒メモ';
       const sMemoKey='student_memo_'+normEmail(b.email||'')+'_'+b.date+'_'+b.start;
-      const sMemo=serverMemos[sMemoKey]||'';
+      const sMemoKey2='student_memo_'+normEmail(b.email||'')+'__'+b.date+'_'+b.start;
+      const sMemo=serverMemos[sMemoKey]||serverMemos[sMemoKey2]||'';
       const noSMemo=LANG==='zh'?'（學生尚未填寫）':'（生徒未記入）';
       const sMemoHTML=sMemo
         ?`<div style="background:#e8f5e9;border-left:3px solid #66bb6a;padding:.5rem .7rem;border-radius:5px;font-size:.82rem;white-space:pre-wrap">${sMemo.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>`
@@ -1721,11 +1726,12 @@ function _renderAdmBookings(){
     const cardId=`admBk_${idx}`;
     const expandId=`admBkExp_${idx}`;
 
-    const teacherMemo=serverMemos['teacher_memo_'+b.date+'_'+b.start]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
+    const teacherMemo=serverMemos['teacher_memo_'+b.date+'_'+b.start]||serverMemos['teacher_memo__'+b.date+'_'+b.start]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
 
     // Lookup student memo from server
     const studentMemoKey='student_memo_'+normEmail(b.email||'')+'_'+b.date+'_'+b.start;
-    const studentMemo=serverMemos[studentMemoKey]||'';
+    const studentMemoKey2='student_memo_'+normEmail(b.email||'')+'__'+b.date+'_'+b.start;
+    const studentMemo=serverMemos[studentMemoKey]||serverMemos[studentMemoKey2]||'';
 
     const card=document.createElement('div');
     card.className='adm-bk-card';
