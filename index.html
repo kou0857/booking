@@ -888,7 +888,7 @@ function saveTeacherMemo(date,start,text){
   // Also save to server (Google Sheets)
   const url=CFG.scriptUrl;
   if(url){
-    fetch(url,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'teacher_memo',date:date,startTime:start,memo:text})})
+    fetch(url,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'teacher_memo_',date:date,startTime:start,memo:text})})
     .catch(e=>{});
   }
   ['tHint_','tHint2_'].forEach(prefix=>{
