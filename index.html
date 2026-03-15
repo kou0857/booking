@@ -985,6 +985,19 @@ function _renderMemoPanelInner(){
   }</div>`;
   if(list)  list.innerHTML =userBk.length?_buildMemoEntries(userBk,'') :emptyHTML;
   if(list2) list2.innerHTML=userBk.length?_buildMemoEntries(userBk,'2'):emptyHTML;
+
+  // Sync any localStorage student memos to server (one-time migration for old memos)
+  if(currentUser.email && CFG.scriptUrl && userBk.length){
+    userBk.forEach(b=>{
+      const localMemo=localStorage.getItem(getMemoKey(b.date,b.start));
+      if(localMemo){
+        const sKey='student_memo_'+normEmail(currentUser.email)+'_'+b.date+'_'+b.start;
+        if(!serverMemos[sKey] || serverMemos[sKey]!==localMemo){
+          fetch(CFG.scriptUrl,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'student_memo_'+normEmail(currentUser.email)+'_',date:b.date,startTime:b.start,memo:localMemo})}).catch(e=>{});
+        }
+      }
+    });
+  }
 }
 
 // ================ CANCEL BOOKING ================
