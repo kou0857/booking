@@ -930,7 +930,7 @@ function saveMemo(date,start,text){
   // Also save to server so teacher can see student memos
   const url=CFG.scriptUrl;
   if(url && currentUser && currentUser.email){
-    fetch(url,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'student_memo_'+normEmail(currentUser.email)+'_',date:date,startTime:start,memo:text})})
+    fetch(url,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'student_memo_'+normEmail(currentUser.email),date:date,startTime:start,memo:text})})
     .catch(e=>{});
   }
   // Update both hint elements (one per memoList)
@@ -944,7 +944,7 @@ function saveTeacherMemo(date,start,text){
   // Also save to server (Google Sheets)
   const url=CFG.scriptUrl;
   if(url){
-    fetch(url,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'teacher_memo_',date:date,startTime:start,memo:text})})
+    fetch(url,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'teacher_memo',date:date,startTime:start,memo:text})})
     .catch(e=>{});
   }
   ['tHint_','tHint2_'].forEach(prefix=>{
@@ -1059,7 +1059,7 @@ function _renderMemoPanelInner(){
       if(localMemo){
         const sKey='student_memo_'+normEmail(currentUser.email)+'_'+b.date+'_'+b.start;
         if(!serverMemos[sKey] || serverMemos[sKey]!==localMemo){
-          fetch(CFG.scriptUrl,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'student_memo_'+normEmail(currentUser.email)+'_',date:b.date,startTime:b.start,memo:localMemo})}).catch(e=>{});
+          fetch(CFG.scriptUrl,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'student_memo_'+normEmail(currentUser.email),date:b.date,startTime:b.start,memo:localMemo})}).catch(e=>{});
         }
       }
     });
