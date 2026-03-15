@@ -877,6 +877,12 @@ function saveUserBooking(bk){
 }
 function saveMemo(date,start,text){
   try{localStorage.setItem(getMemoKey(date,start),text)}catch(e){}
+  // Also save to server so teacher can see student memos
+  const url=CFG.scriptUrl;
+  if(url && currentUser && currentUser.email){
+    fetch(url,{method:'POST',redirect:'follow',body:JSON.stringify({action:'saveMemo',prefix:'student_memo_'+normEmail(currentUser.email)+'_',date:date,startTime:start,memo:text})})
+    .catch(e=>{});
+  }
   // Update both hint elements (one per memoList)
   ['memoHint_','memoHint2_'].forEach(prefix=>{
     const hint=document.getElementById(prefix+date+'_'+start.replace(':',''));
@@ -904,7 +910,7 @@ function _buildMemoEntries(bookings,idSuffix){
     const [y,m,d]=b.date.split('-');
     const dateLabel=`${y}年${parseInt(m)}月${parseInt(d)}日（${wd}）`;
     const savedMemo=localStorage.getItem(getMemoKey(b.date,b.start))||'';
-    const memoKey=b.date+'_'+b.start;
+    const memoKey='teacher_memo_'+b.date+'_'+b.start;
     const teacherMemo=serverMemos[memoKey]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
     const hintId=`memoHint${idSuffix}_${b.date}_${b.start.replace(':','')}`;
     const tHintId=`tHint${idSuffix}_${b.date}_${b.start.replace(':','')}`;
@@ -1411,15 +1417,24 @@ function renderAdBookings(){
     if(!bks.length){list.innerHTML=`<div class="bk-empty">${LANG==='zh'?'尚無預約紀錄':'予約記録はありません'}</div>`;return}
     list.innerHTML='';
     bks.forEach(b=>{
-      const memoKey=b.date+'_'+b.start;
+      const memoKey='teacher_memo_'+b.date+'_'+b.start;
       const tMemo=serverMemos[memoKey]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
       const phTea=LANG==='zh'?'教師備注：課程重點、作業、評語…':'授業メモ：課題・評価など…';
       const tLabel=LANG==='zh'?'✏️ 教師備注':'✏️ 先生メモ';
+      const sLabel2=LANG==='zh'?'📝 學生留言':'📝 生徒メモ';
+      const sMemoKey='student_memo_'+normEmail(b.email||'')+'_'+b.date+'_'+b.start;
+      const sMemo=serverMemos[sMemoKey]||'';
+      const noSMemo=LANG==='zh'?'（學生尚未填寫）':'（生徒未記入）';
+      const sMemoHTML=sMemo
+        ?`<div style="background:#e8f5e9;border-left:3px solid #66bb6a;padding:.5rem .7rem;border-radius:5px;font-size:.82rem;white-space:pre-wrap">${sMemo.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>`
+        :`<div style="color:#999;font-size:.82rem">${noSMemo}</div>`;
       const timeDisp=b.start+' - '+b.end;
       const item=document.createElement('div');item.className='bk-item';
       item.innerHTML=`
         <div class="bk-top"><span class="bk-name">${b.name}</span><span class="bk-time">${b.dateDisp||b.date} ${timeDisp}</span></div>
         <div class="bk-info">${b.email}</div>
+        <div class="memo-section-label" style="margin:.6rem 0 .25rem">${sLabel2}</div>
+        ${sMemoHTML}
         <div class="memo-section-label" style="margin:.6rem 0 .25rem">${tLabel}</div>
         <textarea class="memo-textarea" style="min-height:60px;font-size:.82rem" placeholder="${phTea}"
           oninput="saveTeacherMemo('${b.date}','${b.start}',this.value);renderMemoPanel()"
@@ -1625,7 +1640,11 @@ function _renderAdmBookings(){
     const cardId=`admBk_${idx}`;
     const expandId=`admBkExp_${idx}`;
 
-    const teacherMemo=serverMemos[b.date+'_'+b.start]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
+    const teacherMemo=serverMemos['teacher_memo_'+b.date+'_'+b.start]||localStorage.getItem(getTeacherMemoKey(b.date,b.start))||'';
+
+    // Lookup student memo from server
+    const studentMemoKey='student_memo_'+normEmail(b.email||'')+'_'+b.date+'_'+b.start;
+    const studentMemo=serverMemos[studentMemoKey]||'';
 
     const card=document.createElement('div');
     card.className='adm-bk-card';
@@ -1635,8 +1654,13 @@ function _renderAdmBookings(){
     card.id=cardId;
 
     const tLabel=LANG==='zh'?'✏️ 教師備注':'✏️ 先生メモ';
+    const sLabel=LANG==='zh'?'📝 學生留言':'📝 生徒メモ';
     const tPh=LANG==='zh'?'課程重點、作業、評語…':'授業メモ：課題・評価など…';
     const savedTxt=LANG==='zh'?'已儲存 ✓':'保存済み ✓';
+    const noStudentMemo=LANG==='zh'?'（學生尚未填寫）':'（生徒未記入）';
+    const studentMemoHTML=studentMemo
+      ?`<div class="teacher-note-box" style="background:#e8f5e9;border-left:3px solid #66bb6a;padding:.6rem .8rem;border-radius:6px;font-size:.84rem;white-space:pre-wrap">${studentMemo.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>`
+      :`<div class="teacher-note-empty" style="color:#999;font-size:.82rem">${noStudentMemo}</div>`;
 
     card.innerHTML=`
       <div class="adm-bk-header" onclick="toggleAdmExpand('${expandId}',this)">
@@ -1654,6 +1678,11 @@ function _renderAdmBookings(){
         <button class="adm-bk-toggle" onclick="event.stopPropagation();toggleAdmExpand('${expandId}',this.parentElement)">▼</button>
       </div>
       <div class="adm-bk-expand" id="${expandId}">
+        <!-- Student Memo (read-only) -->
+        <div class="adm-comment-section" style="margin-bottom:.8rem">
+          <div class="adm-comment-label">${sLabel}</div>
+          ${studentMemoHTML}
+        </div>
         <!-- Teacher Memo -->
         <div class="adm-comment-section">
           <div class="adm-comment-label">${tLabel}</div>
