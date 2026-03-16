@@ -714,7 +714,7 @@
 
 <script>
 // ================ VERSION CHECK ================
-const APP_VERSION='20260315c';
+const APP_VERSION='20260316a';
 (function(){try{const v=localStorage.getItem('kou_app_version');if(v&&v!==APP_VERSION){localStorage.removeItem('kou_app_version');location.reload(true);return}localStorage.setItem('kou_app_version',APP_VERSION)}catch(e){}})();
 // ================ I18N ================
 const I18N={
@@ -757,7 +757,7 @@ function show(id){document.getElementById(id).classList.remove('hidden')}
 function hide(id){document.getElementById(id).classList.add('hidden')}
 
 // ================ LOGIN ================
-let loginMode='register'; // 'register' or 'login'
+let loginMode='login'; // 'register' or 'login'
 
 function toggleLoginMode(ev){
   if(ev)ev.preventDefault();
