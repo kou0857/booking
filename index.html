@@ -758,7 +758,7 @@
 
 <script>
 // ================ VERSION CHECK ================
-const APP_VERSION='20260323b';
+const APP_VERSION='20260326a';
 (function(){try{const v=localStorage.getItem('kou_app_version');if(v&&v!==APP_VERSION){localStorage.removeItem('kou_app_version');location.reload(true);return}localStorage.setItem('kou_app_version',APP_VERSION)}catch(e){}})();
 // ================ I18N ================
 const I18N={
@@ -1961,14 +1961,14 @@ function init(){
   try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const off=new Date().getTimezoneOffset();const hrs=Math.abs(Math.floor(off/60));const sign=off<=0?'+':'-';document.getElementById('tzDisp').textContent=`${tz} (GMT${sign}${hrs})`}catch(e){}
   setLang('ja');
   updateLoginUI();
-  if(!tryAutoLogin()){show('step0')}h
+  if(!tryAutoLogin()){show('step0')}
 }
 
 // Override checkPw to redirect to admin dashboard
 checkPw=function(){
   if(document.getElementById('pwInput').value===CFG.password){
     hide('pwOverlay');
-    enterAdminDashboard();h
+    enterAdminDashboard();
   }else{
     document.getElementById('pwErr').classList.remove('hidden');
   }
