@@ -656,6 +656,8 @@
       </div>
       <!-- Booking List -->
       <div id="admMonthNav" style="display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0;flex-wrap:wrap;"><button onclick="changeAdmMonth(-1)" style="background:#4a90d9;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:15px;">&#9664;</button><span id="admMonthLabel" style="font-size:16px;font-weight:bold;min-width:120px;text-align:center;">---</span><button onclick="changeAdmMonth(1)" style="background:#4a90d9;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:15px;">&#9654;</button><button onclick="changeAdmMonth(0)" style="background:#e0e0e0;color:#333;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px;">All</button></div>
+        <div style="text-align:center;margin:8px 0;"><button id="admSyncBtn" onclick="doSyncCalendar()" style="background:#ff9800;color:#fff;border:none;border-radius:6px;padding:8px 20px;cursor:pointer;font-size:14px;font-weight:bold;">🔄 Google Calendar 同期</button></div>
+        
         <div id="admBookingList"></div>
     </div>
 
@@ -759,7 +761,7 @@
 
 <script>
 // ================ VERSION CHECK ================
-const APP_VERSION='20260327b';
+const APP_VERSION='20260327c';
 (function(){try{const v=localStorage.getItem('kou_app_version');if(v&&v!==APP_VERSION){localStorage.removeItem('kou_app_version');location.reload(true);return}localStorage.setItem('kou_app_version',APP_VERSION)}catch(e){}})();
 // ================ I18N ================
 const I18N={
@@ -1722,6 +1724,31 @@ function loadAdmBookings(){
   });
 }
 
+
+
+// === Calendar Sync ===
+function doSyncCalendar() {
+  var btn = document.getElementById("admSyncBtn");
+  if (btn) { btn.disabled = true; btn.textContent = "\u540C\u671F\u4E2D..."; }
+  var url = (typeof cfg !== "undefined" && cfg.scriptUrl) ? cfg.scriptUrl : localStorage.getItem("scriptUrl");
+  if (!url) { alert("Script URL\u672A\u8A2D\u5B9A"); if(btn){btn.disabled=false;btn.textContent="\uD83D\uDD04 Google Calendar \u540C\u671F";} return; }
+  fetch(url + "?action=syncCalendar")
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.status === "ok") {
+        alert("\u540C\u671F\u5B8C\u6210\uFF01\u5DF2\u540C\u671F " + (data.synced || 0) + " \u7B46\u9810\u7D04");
+        loadAdmBookings();
+      } else {
+        alert("\u540C\u671F\u5931\u6557: " + (data.error || "unknown"));
+      }
+      if(btn){btn.disabled=false;btn.textContent="\uD83D\uDD04 Google Calendar \u540C\u671F";}
+    })
+    .catch(function(e) {
+      alert("\u540C\u671F\u932F\u8AA4: " + e.message);
+      if(btn){btn.disabled=false;btn.textContent="\uD83D\uDD04 Google Calendar \u540C\u671F";}
+    });
+}
+// === End Calendar Sync ===
 
 // === Month Navigation ===
 var admSelectedMonth = null;
