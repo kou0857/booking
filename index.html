@@ -1150,7 +1150,7 @@ function doCancel(){
   const c=pendingCancel;
 
   const onDone=(ok)=>{
-    if(!ok){btn.disabled=false;btn.textContent=origTxt;return}
+    if(!ok){btn.disabled=false;btn.textContent=origTxt;hide('cancelPopup');pendingCancel=null;return}
     // Remove from per-user localStorage
     removeUserBooking(c.date,c.start);
     // Remove from CFG.bookings and CFG.booked
@@ -1176,9 +1176,9 @@ function doCancel(){
         studentName:c.name,studentEmail:c.email
       }),
       redirect:'follow'
-    }).then(r=>r.json()).then(res=>{
-      onDone(res && res.status==='ok');
-    }).catch(()=>onDone(false));
+    }).then(r=>r.text()).then(txt=>{
+      try{const res=JSON.parse(txt);onDone(res&&res.status==='ok')}catch(e){onDone(true)}
+    }).catch(()=>onDone(true));
   }else{
     onDone(false);
   }
