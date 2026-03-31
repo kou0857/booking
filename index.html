@@ -364,29 +364,19 @@
         <p style="color:var(--txt-l);font-size:.9rem" data-zh="線上家教預約系統" data-ja="オンライン個別指導予約システム"></p>
       </div>
       <div class="login-body">
-        <p id="loginSubtitle" style="text-align:center;margin-bottom:1.5rem;color:var(--txt-l);font-size:.9rem" data-zh="首次使用請註冊帳號" data-ja="初めての方はアカウント登録してください"></p>
-        <form onsubmit="doLogin(event)">
-          <div class="fg" id="fgName">
-            <label data-zh="姓名" data-ja="氏名"></label>
-            <input type="text" id="loginName" data-ph-zh="請輸入姓名" data-ph-ja="氏名を入力してください" autocomplete="name">
-          </div>
-          <div class="fg">
-            <label data-zh="電子信箱" data-ja="メールアドレス"></label>
-            <input type="email" id="loginEmail" required data-ph-zh="請輸入電子信箱" data-ph-ja="メールアドレスを入力してください" autocomplete="email">
-          </div>
-          <div class="fg">
-            <label data-zh="密碼" data-ja="パスワード"></label>
-            <input type="password" id="loginPass" required data-ph-zh="請設定密碼（至少4位）" data-ph-ja="パスワードを設定（4文字以上）" autocomplete="new-password" minlength="4">
-          </div>
-          <div class="fg" id="fgPassConfirm">
-            <label data-zh="確認密碼" data-ja="パスワード確認"></label>
-            <input type="password" id="loginPassConfirm" data-ph-zh="請再次輸入密碼" data-ph-ja="パスワードを再入力" autocomplete="new-password" minlength="4">
-          </div>
-          <p id="loginError" style="color:#e74c3c;font-size:.85rem;text-align:center;margin-bottom:.8rem;display:none"></p>
-          <button type="submit" class="login-btn" id="loginBtn" data-zh="註冊" data-ja="登録"></button>
-        </form>
-        <p style="text-align:center;margin-top:1rem;font-size:.85rem">
-          <a href="#" id="toggleMode" onclick="toggleLoginMode(event)" style="color:var(--pri);text-decoration:underline;cursor:pointer" data-zh="已有帳號？登入" data-ja="アカウントをお持ちの方はログイン"></a>
+        <p id="loginSubtitle" style="text-align:center;margin-bottom:1.5rem;color:var(--txt-l);font-size:.9rem" data-zh="請輸入您的帳號密碼登入" data-ja="アカウントIDとパスワードを入力してください"></p>
+    <form onsubmit="doLogin(event)">
+      <div class="fg">
+        <label data-zh="帳號" data-ja="アカウントID"></label>
+        <input type="text" id="loginAccountId" required data-ph-zh="例：SP001" data-ph-ja="例：SP001" autocomplete="username" style="text-transform:uppercase">
+      </div>
+      <div class="fg">
+        <label data-zh="密碼" data-ja="パスワード"></label>
+        <input type="password" id="loginPass" required data-ph-zh="請輸入密碼" data-ph-ja="パスワードを入力" autocomplete="current-password">
+      </div>
+      <p id="loginError" style="color:#e74c3c;font-size:.85rem;text-align:center;margin-bottom:.8rem;display:none"></p>
+      <button type="submit" class="login-btn" id="loginBtn" data-zh="登入" data-ja="ログイン"></button>
+    </form>
         </p>
       </div>
     </div>
@@ -804,48 +794,9 @@ function show(id){document.getElementById(id).classList.remove('hidden')}
 function hide(id){document.getElementById(id).classList.add('hidden')}
 
 // ================ LOGIN ================
-let loginMode='login'; // 'register' or 'login'
+// SP account login (no register mode)
 
-function toggleLoginMode(ev){
-  if(ev)ev.preventDefault();
-  loginMode=loginMode==='register'?'login':'register';
-  updateLoginUI();
-}
-
-function updateLoginUI(){
-  const isReg=loginMode==='register';
-  document.getElementById('fgName').style.display=isReg?'':'none';
-  document.getElementById('fgPassConfirm').style.display=isReg?'':'none';
-  document.getElementById('loginName').required=isReg;
-  document.getElementById('loginPassConfirm').required=isReg;
-  const sub=document.getElementById('loginSubtitle');
-  const btn=document.getElementById('loginBtn');
-  const tog=document.getElementById('toggleMode');
-  const passInput=document.getElementById('loginPass');
-  if(isReg){
-    sub.setAttribute('data-zh','首次使用請註冊帳號');
-    sub.setAttribute('data-ja','初めての方はアカウント登録してください');
-    btn.setAttribute('data-zh','註冊');
-    btn.setAttribute('data-ja','登録');
-    tog.setAttribute('data-zh','已有帳號？登入');
-    tog.setAttribute('data-ja','アカウントをお持ちの方はログイン');
-    passInput.setAttribute('data-ph-zh','請設定密碼（至少4位）');
-    passInput.setAttribute('data-ph-ja','パスワードを設定（4文字以上）');
-    passInput.autocomplete='new-password';
-  }else{
-    sub.setAttribute('data-zh','請登入您的帳號');
-    sub.setAttribute('data-ja','アカウントにログインしてください');
-    btn.setAttribute('data-zh','登入');
-    btn.setAttribute('data-ja','ログイン');
-    tog.setAttribute('data-zh','沒有帳號？註冊');
-    tog.setAttribute('data-ja','アカウントをお持ちでない方は登録');
-    passInput.setAttribute('data-ph-zh','請輸入密碼');
-    passInput.setAttribute('data-ph-ja','パスワードを入力');
-    passInput.autocomplete='current-password';
-  }
-  setLang(LANG);
-  hideLoginError();
-}
+// toggleLoginMode and updateLoginUI removed (SP account login only)
 
 function showLoginError(zhMsg,jaMsg){
   const el=document.getElementById('loginError');
@@ -856,98 +807,40 @@ function showLoginError(zhMsg,jaMsg){
 }
 function hideLoginError(){document.getElementById('loginError').style.display='none'}
 
-function getUserPwdKey(email){return'kou_pwd_'+normEmail(email)}
+// getUserPwdKey removed (SP account login only)
 
 function doLogin(e){
   e.preventDefault();
   hideLoginError();
-  const email=document.getElementById('loginEmail').value.trim();
+  const accountId=document.getElementById('loginAccountId').value.trim().toUpperCase();
   const pass=document.getElementById('loginPass').value;
-  if(!email||!pass)return;
-  const ne=normEmail(email);
-
-  if(loginMode==='register'){
-    const name=document.getElementById('loginName').value.trim();
-    const passConfirm=document.getElementById('loginPassConfirm').value;
-    if(!name){showLoginError('請輸入姓名','氏名を入力してください');return}
-    if(pass.length<4){showLoginError('密碼至少需要4位','パスワードは4文字以上必要です');return}
-    if(pass!==passConfirm){showLoginError('兩次密碼不一致','パスワードが一致しません');return}
-    if(CFG.scriptUrl){
-      showLoginError('註冊中…','登録中…');
-      fetch(CFG.scriptUrl,{method:'POST',redirect:'follow',body:JSON.stringify({
-        action:'register',email:ne,name,pass
-      })}).then(r=>r.json()).then(res=>{
-        hideLoginError();
-        if(res.status==='ok'){
-          try{localStorage.setItem(getUserPwdKey(ne),JSON.stringify({name,pass}))}catch(x){}
-          currentUser={name,email:ne};
-          try{localStorage.setItem('kou_user',JSON.stringify(currentUser))}catch(x){}
-          enterCalendar();
-        }else if(res.message==='already_registered'){
-          showLoginError('此信箱已註冊，請直接登入','このメールアドレスは登録済みです。ログインしてください');
-          loginMode='login';updateLoginUI();
-        }else{
-          _doLocalRegister(ne,name,pass);
-        }
-      }).catch(()=>{hideLoginError();_doLocalRegister(ne,name,pass)});
+  if(!accountId||!pass)return;
+  if(!CFG.scriptUrl){showLoginError('系統未設定','システム未設定');return}
+  showLoginError('登入中…','ログイン中…');
+  fetch(CFG.scriptUrl,{method:'POST',redirect:'follow',body:JSON.stringify({
+    action:'spLogin',accountId:accountId,pass:pass
+  })}).then(r=>r.json()).then(res=>{
+    hideLoginError();
+    if(res.status==='ok'){
+      currentUser={name:res.name,email:res.email,accountId:res.accountId};
+      try{localStorage.setItem('kou_user',JSON.stringify(currentUser))}catch(x){}
+      enterCalendar();
+    }else if(res.message==='not_found'){
+      showLoginError('帳號不存在','アカウントが見つかりません');
+    }else if(res.message==='wrong_password'){
+      showLoginError('密碼錯誤','パスワードが間違っています');
     }else{
-      _doLocalRegister(ne,name,pass);
+      showLoginError('登入失敗','ログインに失敗しました');
     }
-  }else{
-    if(CFG.scriptUrl){
-      showLoginError('登入中…','ログイン中…');
-      fetch(CFG.scriptUrl,{method:'POST',redirect:'follow',body:JSON.stringify({
-        action:'login',email:ne,pass
-      })}).then(r=>r.json()).then(res=>{
-        hideLoginError();
-        if(res.status==='ok'){
-          try{localStorage.setItem(getUserPwdKey(ne),JSON.stringify({name:res.name,pass}))}catch(x){}
-          currentUser={name:res.name,email:ne};
-          try{localStorage.setItem('kou_user',JSON.stringify(currentUser))}catch(x){}
-          enterCalendar();
-        }else if(res.message==='not_found'){
-          showLoginError('此信箱尚未註冊，請先註冊','このメールアドレスは未登録です。先に登録してください');
-          loginMode='register';updateLoginUI();
-        }else if(res.message==='wrong_password'){
-          showLoginError('密碼錯誤','パスワードが間違っています');
-        }else{
-          _doLocalLogin(ne,pass);
-        }
-      }).catch(()=>{hideLoginError();_doLocalLogin(ne,pass)});
-    }else{
-      _doLocalLogin(ne,pass);
-    }
-  }
-}
-function _doLocalRegister(ne,name,pass){
-  const pwdKey=getUserPwdKey(ne);
-  if(localStorage.getItem(pwdKey)){showLoginError('此信箱已註冊，請直接登入','このメールアドレスは登録済みです。ログインしてください');loginMode='login';updateLoginUI();return}
-  try{localStorage.setItem(pwdKey,JSON.stringify({name,pass}))}catch(x){}
-  currentUser={name,email:ne};
-  try{localStorage.setItem('kou_user',JSON.stringify(currentUser))}catch(x){}
-  enterCalendar();
-}
-function _doLocalLogin(ne,pass){
-  const pwdKey=getUserPwdKey(ne);
-  const stored=localStorage.getItem(pwdKey);
-  if(!stored){showLoginError('此信箱尚未註冊，請先註冊','このメールアドレスは未登録です。先に登録してください');loginMode='register';updateLoginUI();return}
-  const data=JSON.parse(stored);
-  if(data.pass!==pass){showLoginError('密碼錯誤','パスワードが間違っています');return}
-  currentUser={name:data.name,email:ne};
-  try{localStorage.setItem('kou_user',JSON.stringify(currentUser))}catch(x){}
-  if(CFG.scriptUrl){fetch(CFG.scriptUrl,{method:'POST',redirect:'follow',body:JSON.stringify({action:'register',email:ne,name:data.name,pass})}).catch(()=>{})}
-  enterCalendar();
+  }).catch(()=>{hideLoginError();showLoginError('連線失敗，請稍後再試','接続エラー、後でもう一度お試しください')});
 }
 function doLogout(){
   currentUser={name:'',email:''};
   isAdmin=false;
   try{localStorage.removeItem('kou_user')}catch(e){}
   hide('step1');hide('step2');show('step0');
-  loginMode='login';updateLoginUI();
-  document.getElementById('loginEmail').value='';
+  document.getElementById('loginAccountId').value='';
   document.getElementById('loginPass').value='';
-  document.getElementById('loginName').value='';
-  document.getElementById('loginPassConfirm').value='';
   window.scrollTo(0,0);
 }
 function enterCalendar(){
@@ -1264,10 +1157,7 @@ function tryAutoLogin(){
     if(s){
       const u=JSON.parse(s);
       if(u.name&&u.email){
-        const pwdKey=getUserPwdKey(u.email);
-        if(localStorage.getItem(pwdKey)){
-          currentUser=u;enterCalendar();return true;
-        }
+        currentUser=u;enterCalendar();return true;
       }
     }
   }catch(e){}
@@ -2038,7 +1928,6 @@ function admTestScript(){
 function init(){
   try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const off=new Date().getTimezoneOffset();const hrs=Math.abs(Math.floor(off/60));const sign=off<=0?'+':'-';document.getElementById('tzDisp').textContent=`${tz} (GMT${sign}${hrs})`}catch(e){}
   setLang('ja');
-  updateLoginUI();
   if(!tryAutoLogin()){show('step0')}
 }
 
