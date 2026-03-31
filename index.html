@@ -2092,7 +2092,7 @@ function renderParentDashboard(data) {
   title.textContent = LANG === 'zh'
     ? data.studentName + ' 的課程紀錄'
     : data.studentName + ' のレッスン記録';
-  var bookings = (data.bookings || []).filter(function(b){ return !isCancelled(b.date, b.start); });
+  var bookings = (data.bookings || []).filter(function(b){ return !isCancelled(b.date, b.startTime || b.start); });
   var now = new Date();
   var thisMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
   var monthBookings = bookings.filter(function(b){ return b.date.startsWith(thisMonth); });
