@@ -1073,7 +1073,7 @@ function renderMemoPanel(){
       fetchServerMemos()
     ]).then(([bkData])=>{
       if(bkData&&bkData.status==='ok'){
-        CFG.bookings=bkData.bookings.map(b=>({name:b.name,email:b.email,date:b.date,start:b.start,end:b.end,dateDisp:b.dateDisp,time:b.start+' - '+b.end,gcal:b.gcal}));
+        CFG.bookings=bkData.bookings.map(b=>({name:b.name,email:b.email,date:b.date,start:b.start,end:b.end,dateDisp:b.dateDisp,time:b.start+' - '+b.end,gcal:b.gcal})).filter(b=>!isCancelled(b.date,b.start));
         const ce=normEmail(currentUser.email);
         const myBk=CFG.bookings.filter(b=>normEmail(b.email)===ce);
         try{localStorage.setItem(getUserBkKey(),JSON.stringify(myBk))}catch(x){}
@@ -1141,6 +1141,19 @@ function openCancelPopup(date,start,end,name,email){
   show('cancelPopup');
 }
 function closeCancelPopup(){hide('cancelPopup');pendingCancel=null}
+// === LOCAL CANCEL LIST (workaround for GAS cancel bug) ===
+function getCancelledKeys(){
+  try{return JSON.parse(localStorage.getItem('kou_cancelled')||'[]')}catch(e){return[]}
+}
+function addCancelledKey(date,start){
+  const arr=getCancelledKeys();
+  const key=date+'_'+start;
+  if(!arr.includes(key)){arr.push(key);try{localStorage.setItem('kou_cancelled',JSON.stringify(arr))}catch(e){}}
+}
+function isCancelled(date,start){
+  return getCancelledKeys().includes(date+'_'+start);
+}
+
 function doCancel(){
   if(!pendingCancel)return;
   const btn=document.getElementById('cancelConfirmBtn');
@@ -1149,38 +1162,33 @@ function doCancel(){
   btn.textContent=LANG==='zh'?'取消中...':'キャンセル中...';
   const c=pendingCancel;
 
-  const onDone=(ok)=>{
-    if(!ok){btn.disabled=false;btn.textContent=origTxt;hide('cancelPopup');pendingCancel=null;return}
-    // Remove from per-user localStorage
-    removeUserBooking(c.date,c.start);
-    // Remove from CFG.bookings and CFG.booked
-    const bKey=`${c.date}_${c.start}`;
-    CFG.bookings=(CFG.bookings||[]).filter(b=>!(b.date===c.date&&b.start===c.start&&normEmail(b.email)===normEmail(c.email)));
-    CFG.booked=(CFG.booked||[]).filter(k=>k!==bKey);
-    // Clear busy slot cache for that date so calendar refreshes
-    delete busySlotCache[c.date];
-    saveCfg();
-    hide('cancelPopup');
-    btn.disabled=false;btn.textContent=origTxt;
-    pendingCancel=null;
-    renderMemoPanel();
-    if(selDate&&fmtISO(selDate)===c.date){renderSlots()}
-  };
+  // Optimistic: persist cancel intent FIRST (survives GAS re-sync)
+  addCancelledKey(c.date,c.start);
 
+  // Remove from local data immediately
+  removeUserBooking(c.date,c.start);
+  const bKey=c.date+'_'+c.start;
+  CFG.bookings=CFG.bookings.filter(b=>!(b.date===c.date&&b.start===c.start&&normEmail(b.email)===normEmail(c.email)));
+  CFG.booked=CFG.booked.filter(k=>k!==bKey);
+  delete busySlotCache[c.date];
+  saveCfg();
+  hide('cancelPopup');
+  btn.disabled=false;btn.textContent=origTxt;
+  pendingCancel=null;
+  // Render cards directly (NOT renderMemoPanel which re-syncs from GAS)
+  renderMemoCards();
+  if(selDate&&fmtISO(selDate)===c.date){ renderSlots(); }
+
+  // Fire GAS cancel in background (best-effort)
   if(CFG.scriptUrl){
     fetch(CFG.scriptUrl,{
       method:'POST',
       body:JSON.stringify({
-        action:'cancel',
-        date:c.date,startTime:c.start,endTime:c.end,
+        action:'cancel',date:c.date,startTime:c.start,endTime:c.end,
         studentName:c.name,studentEmail:c.email
       }),
       redirect:'follow'
-    }).then(r=>r.text()).then(txt=>{
-      onDone(true)
-    }).catch(()=>onDone(true));
-  }else{
-    onDone(false);
+    }).then(r=>r.text()).catch(()=>{});
   }
 }
 function removeUserBooking(date,start){
