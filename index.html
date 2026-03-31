@@ -775,7 +775,7 @@ function setLang(l){
   document.querySelectorAll('[data-zh]').forEach(el=>{el.textContent=el.getAttribute('data-'+l)});
   document.querySelectorAll('[data-ph-zh]').forEach(el=>{el.placeholder=el.getAttribute('data-ph-'+l)});
   document.querySelectorAll('select option[data-zh]').forEach(el=>{el.textContent=el.getAttribute('data-'+l)});
-  renderWeek(); if(selDate)renderSlots(); renderMemoPanel();
+  renderWeek(); renderSlots(); renderMemoPanel();
 }
 
 // ================ CONFIG ================
@@ -2092,7 +2092,7 @@ function renderParentDashboard(data) {
   title.textContent = LANG === 'zh'
     ? data.studentName + ' 的課程紀錄'
     : data.studentName + ' のレッスン記録';
-  var bookings = data.bookings || [];
+  var bookings = (data.bookings || []).filter(function(b){ return !isCancelled(b.date, b.start); });
   var now = new Date();
   var thisMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
   var monthBookings = bookings.filter(function(b){ return b.date.startsWith(thisMonth); });
