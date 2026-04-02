@@ -535,6 +535,7 @@
         <button class="admin-tab active" onclick="showAdTab(0,this)" data-zh="時段管理" data-ja="時間帯管理"></button>
         <button class="admin-tab" onclick="showAdTab(1,this)" data-zh="預約列表" data-ja="予約一覧"></button>
         <button class="admin-tab" onclick="showAdTab(2,this)" data-zh="設定" data-ja="設定"></button>
+        <button class="admin-tab" onclick="showAdTab(3,this);loadAdmAccounts()" data-zh="帳號管理" data-ja="アカウント管理"></button>
       </div>
       <!-- Tab 0: Slots -->
       <div class="ad-tab" id="adTab0">
@@ -578,6 +579,39 @@
           <button onclick="testScript()" style="margin-top:.4rem;padding:.35rem .8rem;border:1.5px solid var(--pri-l);border-radius:5px;background:none;color:var(--pri-l);font-size:.8rem;font-weight:600;cursor:pointer" data-zh="測試連線" data-ja="接続テスト"></button>
         </div>
         <button class="btn-save" onclick="saveSettings()" data-zh="儲存設定" data-ja="設定を保存"></button>
+      </div>
+      <!-- Tab 3: Account Management -->
+      <div class="ad-tab hidden" id="adTab3">
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+          <select id="admAccFilter2" onchange="filterAdmAccounts()" style="padding:6px 10px;border:1px solid var(--bdr);border-radius:6px">
+            <option value="all" data-zh="全部" data-ja="すべて"></option>
+            <option value="used" data-zh="已使用" data-ja="使用中"></option>
+            <option value="unused" data-zh="未使用" data-ja="未使用"></option>
+          </select>
+          <input type="text" id="admAccSearch2" oninput="filterAdmAccounts()" placeholder="搜尋帳號/姓名/信箱..." style="flex:1;min-width:160px;padding:6px 10px;border:1px solid var(--bdr);border-radius:6px">
+          <button onclick="loadAdmAccounts()" style="padding:6px 14px;border:1.5px solid var(--pri-l);border-radius:6px;background:none;color:var(--pri-l);font-weight:600;cursor:pointer" data-zh="🔄 重新整理" data-ja="🔄 更新"></button>
+        </div>
+        <div id="admAccSummary2" style="font-size:.85rem;color:#666;margin-bottom:8px"></div>
+        <div id="admAccList2" style="overflow-x:auto;max-height:400px;overflow-y:auto"></div>
+        <div id="admAccEditModal2" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:99999;justify-content:center;align-items:center">
+          <div style="background:#fff;border-radius:12px;padding:24px;max-width:400px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:16px" data-zh="編輯帳號" data-ja="アカウント編集"></div>
+            <div style="margin-bottom:8px"><strong>ID:</strong> <span id="admAccEditId2"></span></div>
+            <div style="margin-bottom:8px"><strong data-zh="密碼" data-ja="パスワード"></strong>: <span id="admAccEditPw2"></span></div>
+            <div style="margin-bottom:10px">
+              <label style="font-weight:600" data-zh="姓名" data-ja="名前"></label>
+              <input type="text" id="admAccEditName2" style="width:100%;padding:8px;border:1px solid var(--bdr);border-radius:6px;margin-top:4px">
+            </div>
+            <div style="margin-bottom:16px">
+              <label style="font-weight:600">Email</label>
+              <input type="email" id="admAccEditEmail2" style="width:100%;padding:8px;border:1px solid var(--bdr);border-radius:6px;margin-top:4px">
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+              <button onclick="closeAccEditModal()" style="padding:8px 16px;border:1px solid var(--bdr);border-radius:6px;background:#f5f5f5;cursor:pointer" data-zh="取消" data-ja="キャンセル"></button>
+              <button onclick="admSaveAccount()" style="padding:8px 16px;border:none;border-radius:6px;background:var(--pri);color:#fff;font-weight:600;cursor:pointer" data-zh="儲存" data-ja="保存"></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1954,9 +1988,14 @@ function toggleNoshow(email, date, startTime, noshow) {
 
 // ================ ACCOUNT MANAGEMENT ================
 var admAccounts = [];
+function _accEl(id){
+  var ao=document.getElementById('adminOverlay');
+  if(ao&&getComputedStyle(ao).display!=='none'){var e=document.getElementById(id+'2');if(e)return e;}
+  return document.getElementById(id);
+}
 
 function loadAdmAccounts() {
-  var listEl = document.getElementById('admAccList');
+  var listEl = _accEl('admAccList');
   listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#999">載入中...</div>';
   fetch(CFG.scriptUrl + '?action=listAccounts')
     .then(function(r){ return r.json(); })
@@ -1974,8 +2013,8 @@ function loadAdmAccounts() {
 }
 
 function filterAdmAccounts() {
-  var filter = document.getElementById('admAccFilter').value;
-  var search = (document.getElementById('admAccSearch').value || '').toLowerCase();
+  var filter = _accEl('admAccFilter').value;
+  var search = (_accEl('admAccSearch').value || '').toLowerCase();
   var filtered = admAccounts.filter(function(a) {
     if (filter === 'used' && a.status !== 'used') return false;
     if (filter === 'unused' && a.status !== 'unused') return false;
@@ -1987,7 +2026,7 @@ function filterAdmAccounts() {
   });
   var usedCount = admAccounts.filter(function(a){ return a.status==='used'; }).length;
   var unusedCount = admAccounts.length - usedCount;
-  document.getElementById('admAccSummary').innerHTML =
+  _accEl('admAccSummary').innerHTML =
     (LANG==='ja' ? '合計: '+admAccounts.length+' 件 | 使用中: '+usedCount+' | 未使用: '+unusedCount+' | 表示: '+filtered.length
      : '總計: '+admAccounts.length+' 筆 | 已使用: '+usedCount+' | 未使用: '+unusedCount+' | 顯示: '+filtered.length);
   renderAdmAccTable(filtered);
@@ -2021,27 +2060,27 @@ function renderAdmAccTable(list) {
   if (list.length === 0) {
     html = '<div style="text-align:center;padding:20px;color:#999">' + (LANG==='ja'?'該当するアカウントがありません':'沒有符合的帳號') + '</div>';
   }
-  document.getElementById('admAccList').innerHTML = html;
+  _accEl('admAccList').innerHTML = html;
 }
 
 function openAccEditModal(accountId) {
   var acc = admAccounts.find(function(a){ return a.accountId === accountId; });
   if (!acc) return;
-  document.getElementById('admAccEditId').textContent = acc.accountId;
-  document.getElementById('admAccEditPw').textContent = acc.pw;
-  document.getElementById('admAccEditName').value = acc.name || '';
-  document.getElementById('admAccEditEmail').value = acc.email || '';
-  document.getElementById('admAccEditModal').style.display = 'flex';
+  _accEl('admAccEditId').textContent = acc.accountId;
+  _accEl('admAccEditPw').textContent = acc.pw;
+  _accEl('admAccEditName').value = acc.name || '';
+  _accEl('admAccEditEmail').value = acc.email || '';
+  _accEl('admAccEditModal').style.display = 'flex';
 }
 
 function closeAccEditModal() {
-  document.getElementById('admAccEditModal').style.display = 'none';
+  _accEl('admAccEditModal').style.display = 'none';
 }
 
 function admSaveAccount() {
-  var accountId = document.getElementById('admAccEditId').textContent;
-  var name = document.getElementById('admAccEditName').value.trim();
-  var email = document.getElementById('admAccEditEmail').value.trim();
+  var accountId = _accEl('admAccEditId').textContent;
+  var name = _accEl('admAccEditName').value.trim();
+  var email = _accEl('admAccEditEmail').value.trim();
   var btn = event.target;
   btn.disabled = true;
   btn.textContent = LANG==='ja' ? '保存中...' : '儲存中...';
